@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+
 import { toast } from "sonner"; // <-- ADD THIS IMPORT
 import { UserFormData } from "@/lib/types/user";
 
@@ -78,107 +79,117 @@ export function RegistrationForm() {
   }, [state, form]); // Ensure dependencies are correct
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md">
-      <h1 className="mb-6 text-center text-2xl font-bold">User Registration</h1>
-      <Form {...form}>
-        <form action={formAction} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter your full name"
-                    disabled={isPending}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form action={formAction} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm font-medium">Full Name</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter your full name"
+                  disabled={isPending}
+                  {...field}
+                  className="h-11 transition-all duration-200 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email Address</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    disabled={isPending}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm font-medium">
+                Email Address
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  disabled={isPending}
+                  {...field}
+                  className="h-11 transition-all duration-200 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="age"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Age</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Enter your age"
-                    disabled={isPending}
-                    {...field}
-                    // Handle change to number. Zod's coerce will handle string to number
-                    // But input elements return strings, so manual Number() conversion is needed here for RHF.
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      field.onChange(value === "" ? undefined : Number(value));
-                    }}
-                    value={field.value ?? ""} // Ensure controlled component handles undefined
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="age"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm font-medium">Age</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="Enter your age"
+                  disabled={isPending}
+                  {...field}
+                  // Handle change to number. Zod's coerce will handle string to number
+                  // But input elements return strings, so manual Number() conversion is needed here for RHF.
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === "" ? undefined : Number(value));
+                  }}
+                  value={field.value ?? ""} // Ensure controlled component handles undefined
+                  className="h-11 transition-all duration-200 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Message</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Tell us about yourself..."
-                    rows={4}
-                    disabled={isPending}
-                    {...field}
-                    value={field.value ?? ""} // Ensure controlled component handles undefined
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm font-medium">Message</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Tell us about yourself..."
+                  rows={4}
+                  disabled={isPending}
+                  {...field}
+                  value={field.value ?? ""} // Ensure controlled component handles undefined
+                  className="min-h-[100px] resize-none transition-all duration-200 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={
-              isPending ||
-              !form.formState.isValid ||
-              form.formState.isSubmitting ||
-              form.formState.isLoading
-            }
-          >
-            {isPending ? "Submitting..." : "Submit Form"}
-          </Button>
-        </form>
-      </Form>
-    </div>
+        <Button
+          type="submit"
+          className="h-11 w-full transform bg-gradient-to-r from-primary to-primary/90 font-medium text-primary-foreground transition-all duration-200 hover:scale-[1.02] hover:from-primary/90 hover:to-primary active:scale-[0.98]"
+          disabled={
+            isPending ||
+            !form.formState.isValid ||
+            form.formState.isSubmitting ||
+            form.formState.isLoading
+          }
+        >
+          {isPending ? (
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              Submitting...
+            </div>
+          ) : (
+            "Create Account"
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }
