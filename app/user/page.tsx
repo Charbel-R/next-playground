@@ -11,8 +11,8 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 px-4 py-12">
-      <div className="container mx-auto">
+    <main className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/40 py-12">
+      <div className="container">
         <Link
           href="/"
           className="mb-8 inline-flex items-center gap-2 font-medium text-primary transition-colors duration-200 hover:text-primary/80"

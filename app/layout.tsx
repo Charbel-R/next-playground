@@ -12,7 +12,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
@@ -22,10 +22,21 @@ export default async function RootLayout({
           storageKey="theme"
         >
           {children}
-          <div className="absolute end-0 top-0 pe-4 pt-4">
+          <div className="fixed right-4 top-4 z-50">
             <ModeToggle />
           </div>
-          <Toaster />
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            toastOptions={{
+              style: {
+                background: "hsl(var(--card))",
+                color: "hsl(var(--card-foreground))",
+                border: "1px solid hsl(var(--border))",
+              },
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>
