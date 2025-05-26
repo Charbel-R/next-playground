@@ -23,9 +23,8 @@ export default function Home() {
           <ServerGreeting />
         </Suspense>
 
-        <HelloWorldSection />
-        {/* Top component content */}
         {/* client components */}
+        <HelloWorldSection />
       </div>
     </main>
   );
