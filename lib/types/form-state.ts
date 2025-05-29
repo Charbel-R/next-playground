@@ -4,20 +4,27 @@ export type FormDataObject = Record<
   string | File | boolean | undefined | (string | File)[]
 >;
 
-export type FormActionState<T> = {
-  success: boolean;
-  message?: string;
+export type FormErrorState = {
+  success: false;
+  message: string;
   errors?: Record<string, string[]>;
-  data?: T;
 };
+
+export type FormSuccessState<T> = {
+  success: true;
+  message: string;
+  data: T;
+};
+
+export type FormActionState<T> = FormErrorState | FormSuccessState<T>;
 
 /**
  * Helper function to create error responses consistently
  */
-export function createFormErrRes<T>(
+export function createFormErrRes(
   message: string,
   errors?: Record<string, string[]>,
-): FormActionState<T> {
+): FormErrorState {
   return {
     success: false,
     message,
@@ -31,7 +38,7 @@ export function createFormErrRes<T>(
 export function createFormSuccessRes<T>(
   message: string,
   data: T,
-): FormActionState<T> {
+): FormSuccessState<T> {
   return {
     success: true,
     message,

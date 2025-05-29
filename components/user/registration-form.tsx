@@ -1,11 +1,12 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { submitUserForm } from "@/server/actions/user-actions";
-import { userFormSchema } from "@/lib/validations/schema";
-import type { FormActionState } from "@/lib/types/form-state";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,17 +17,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 
-import { toast } from "sonner"; // <-- ADD THIS IMPORT
+import { submitUserForm } from "@/server/actions/user-actions";
+
+import { FormErrorState } from "@/lib/types/form-state";
 import { UserFormData } from "@/lib/types/user";
+import {
+  registrationFormInitialValues,
+  userFormSchema,
+} from "@/lib/validations/schema";
 
 // Updated initialState to match lib/types.ts and better reflect useActionState
-const initialState: FormActionState<UserFormData> = {
-  success: false, // Default to false
-  message: "", // Default to empty string
-  errors: undefined,
-  data: undefined,
+const initialState: FormErrorState = {
+  success: false,
+  message: "",
 };
 
 export function RegistrationForm() {
@@ -37,12 +41,7 @@ export function RegistrationForm() {
 
   const form = useForm<UserFormData>({
     resolver: zodResolver(userFormSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      age: undefined, // Default to undefined for optional numbers
-      message: "", // Default to empty string for optional strings
-    },
+    defaultValues: registrationFormInitialValues,
     // Make validation interactive: validate on every change
     mode: "onChange", // Validate as user types
     reValidateMode: "onChange", // Re-validate on every change
@@ -61,7 +60,7 @@ export function RegistrationForm() {
     }
 
     // Set errors coming from the server zodValidation to their respective fields
-    if (state.errors) {
+    if (!state.success && state.errors) {
       Object.entries(state.errors).forEach(([field, messages]) => {
         if (field !== "_form" && messages && messages.length > 0) {
           form.setError(field as keyof UserFormData, {
@@ -114,33 +113,6 @@ export function RegistrationForm() {
                   placeholder="Enter your email"
                   disabled={isPending}
                   {...field}
-                  className="h-11 transition-all duration-200 focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="age"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium">Age</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter your age"
-                  disabled={isPending}
-                  {...field}
-                  // Handle change to number. Zod's coerce will handle string to number
-                  // But input elements return strings, so manual Number() conversion is needed here for RHF.
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value === "" ? undefined : Number(value));
-                  }}
-                  value={field.value ?? ""} // Ensure controlled component handles undefined
                   className="h-11 transition-all duration-200 focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 />
               </FormControl>
