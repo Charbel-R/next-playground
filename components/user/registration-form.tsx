@@ -20,23 +20,17 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { submitUserForm } from "@/server/actions/user-actions";
 
-import { FormErrorState } from "@/lib/types/form-state";
+import { formActionInitialState } from "@/lib/types/form-state";
 import { UserFormData } from "@/lib/types/user";
 import {
   registrationFormInitialValues,
   userFormSchema,
 } from "@/lib/validations/schema";
 
-// Updated initialState to match lib/types.ts and better reflect useActionState
-const initialState: FormErrorState = {
-  success: false,
-  message: "",
-};
-
 export function RegistrationForm() {
   const [state, formAction, isPending] = useActionState(
     submitUserForm,
-    initialState,
+    formActionInitialState,
   );
 
   const form = useForm<UserFormData>({
@@ -75,7 +69,7 @@ export function RegistrationForm() {
     if (state.success) {
       form.reset();
     }
-  }, [state, form]); // Ensure dependencies are correct
+  }, [state.success, state.message]); // Ensure dependencies are correct
 
   return (
     <Form {...form}>

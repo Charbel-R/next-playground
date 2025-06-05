@@ -25,3 +25,11 @@ export const contactFormSchema = z.object({
   message: z.string().min(20, "Message must be at least 20 characters"),
   urgent: z.boolean().optional(),
 });
+
+// todo schema for creating a new todo item
+export const newTodoSchema = z.object({
+  title: z
+    .string()
+    .min(4, "Task title is required")
+    .max(100, "Task title is too long"),
+});
